@@ -1,6 +1,8 @@
 # How to do \*things\* in the project <!-- omit in toc --> 
 - [Changing the content](#changing-the-content)
   - [Updating and creating content in the CMS from the code](#updating-and-creating-content-in-the-cms-from-the-code)
+    - [Creating an entry](#creating-an-entry)
+    - [Creating an asset and linking it to an entry](#creating-an-asset-and-linking-it-to-an-entry)
 - [Adding a location to the map](#adding-a-location-to-the-map)
 - [Using the location of a (mobile) device](#using-the-location-of-a-mobile-device)
 - [Testing the project on a mobile device](#testing-the-project-on-a-mobile-device)
@@ -20,7 +22,7 @@ When you introduce new content types that are not yet shown in the application, 
 ### Updating and creating content in the CMS from the code
 You can also create entries and assets (like images) directly from the code instead of going through the UI of the CMS. It is a bit complicated and depending on your use case, a database might be better suited. But here's a quick primer on how to do it.
 
-####Creating an entry
+#### Creating an entry
 ```javascript
     createEntry: async function() {
       try {
@@ -40,7 +42,7 @@ You can also create entries and assets (like images) directly from the code inst
       }
     },
 ```
-####Creating an asset and linking it to an entry
+#### Creating an asset and linking it to an entry
 ```javascript
     createAsset: async function(event) {
       let file = event.target.files[0];
