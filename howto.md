@@ -20,7 +20,7 @@ To get started with Contentful use [this guide](https://www.contentful.com/r/kno
 When you introduce new content types that are not yet shown in the application, work together with the technical person in the team to set this up.
 
 ### Updating and creating content in the CMS from the code
-You can also create entries and assets (like images) directly from the code instead of going through the UI of the CMS. It is a bit complicated and depending on your use case, a database might be better suited. But here's a quick primer on how to do it.
+You can also create entries and assets (like images) directly from the code instead of going through the UI of the CMS. It is a bit complicated and depending on your use case, a database might be better suited. But here's a quick primer on how to do it. Also have a look at the [the SDK documentation](https://contentful.github.io/contentful-management.js/contentful-management/5.10.0/Entry.html#.update).
 
 #### Creating an entry
 ```javascript
