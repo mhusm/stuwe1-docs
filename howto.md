@@ -1,11 +1,13 @@
 # How to do \*things\* in the project <!-- omit in toc --> 
 - [Changing the content](#changing-the-content)
+  - [Updating and creating content in the CMS from the code](#updating-and-creating-content-in-the-cms-from-the-code)
 - [Adding a location to the map](#adding-a-location-to-the-map)
 - [Using the location of a (mobile) device](#using-the-location-of-a-mobile-device)
 - [Testing the project on a mobile device](#testing-the-project-on-a-mobile-device)
-    - [Device emulation on the desktop](#device-emulation-on-the-desktop)
-    - [Connecting a real device](#connecting-a-real-device)
-    - [Debugging with a real device](#debugging-with-a-real-device)
+  - [Device emulation on the desktop](#device-emulation-on-the-desktop)
+  - [Connecting a real device](#connecting-a-real-device)
+  - [Debugging with a real device](#debugging-with-a-real-device)
+  - [Extending this guide](#extending-this-guide)
 
 ## Changing the content
 You can add, remove or change text and images directly in the soure code by editing the HTML templates in the .vue files.
@@ -15,6 +17,88 @@ To get started with Contentful use [this guide](https://www.contentful.com/r/kno
 
 When you introduce new content types that are not yet shown in the application, work together with the technical person in the team to set this up.
 
+### Updating and creating content in the CMS from the code
+You can also create entries and assets (like images) directly from the code instead of going through the UI of the CMS. It is a bit complicated and depending on your use case, a database might be better suited. But here's a quick primer on how to do it.
+
+####Creating an entry
+```javascript
+    createEntry: async function() {
+      try {
+        let space = await window.contentfulClient.getSpace("<your space id>");
+        let env = await space.getEnvironment("master");
+        let entry = await env.createEntry("<your content type>", {
+          fields: {
+            title: {
+              "en-US": "my new entry"
+            }
+          }
+        });
+        entry = await entry.publish();
+        console.log(`Entry ${entry.sys.id} published.`);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+```
+####Creating an asset and linking it to an entry
+```javascript
+    createAsset: async function(event) {
+      let file = event.target.files[0];
+      let reader = new FileReader();
+      reader.onload = async function(result) {
+        try {
+        let space = await window.contentfulClient.getSpace("<your space id>");
+        let env = await space.getEnvironment("master");
+        let upload = await env.createUpload({ file: reader.result });
+
+        let asset = await env.createAsset({
+          fields: {
+            title: {
+              "en-US": file.name
+            },
+            file: {
+              "en-US": {
+                fileName: file.name,
+                contentType: file.type,
+                uploadFrom: {
+                  sys: {
+                    type: "Link",
+                    linkType: "Upload",
+                    id: upload.sys.id
+                  }
+                }
+              }
+            }
+          }
+        });
+        asset = await asset.processForAllLocales();
+        asset = await asset.publish();
+        let entry = await env.createEntry("<content type>", {
+          fields: {
+            title: {
+              "en-US": "my new entry with image"
+            },
+            "<your field name>": {
+              "en-US": {
+                sys: {
+                  id: asset.sys.id,
+                  linkType: "Asset",
+                  type: "Link"
+                }
+              }
+            }
+          }
+        });
+        entry = await entry.publish();
+
+        }
+        catch (error) {
+          console.error(error);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+```
 ## Adding a location to the map
 You can use the Location type in Contentful to store coordinates.
 
