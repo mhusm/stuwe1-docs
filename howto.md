@@ -28,11 +28,12 @@ createEntry: async function() {
     try {
     let space = await window.contentfulClient.getSpace("<your space id>");
     let env = await space.getEnvironment("master");
-    let entry = await env.createEntry("<your content type>", {
-        fields: {
-        title: {
-            "en-US": "my new entry"
-        }
+    let entry = await env.createEntry("<your content type>",
+        {
+            fields: {
+            title: {
+                "en-US": "my new entry"
+            }
         }
     });
     entry = await entry.publish();
@@ -59,17 +60,17 @@ createAsset: async function(event) {
             "en-US": file.name
             },
             file: {
-            "en-US": {
-                fileName: file.name,
-                contentType: file.type,
-                uploadFrom: {
-                sys: {
-                    type: "Link",
-                    linkType: "Upload",
-                    id: upload.sys.id
+                "en-US": {
+                    fileName: file.name,
+                    contentType: file.type,
+                    uploadFrom: {
+                    sys: {
+                        type: "Link",
+                        linkType: "Upload",
+                        id: upload.sys.id
+                    }
+                    }
                 }
-                }
-            }
             }
         }
         });
@@ -81,13 +82,13 @@ createAsset: async function(event) {
             "en-US": "my new bike spot with image"
             },
             portrait: {
-            "en-US": {
-                sys: {
-                id: asset.sys.id,
-                linkType: "Asset",
-                type: "Link"
+                "en-US": {
+                    sys: {
+                    id: asset.sys.id,
+                    linkType: "Asset",
+                    type: "Link"
+                    }
                 }
-            }
             }
         }
         });
