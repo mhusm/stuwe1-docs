@@ -24,82 +24,80 @@ You can also create entries and assets (like images) directly from the code inst
 
 #### Creating an entry
 ```javascript
-    createEntry: async function() {
-      try {
-        let space = await window.contentfulClient.getSpace("<your space id>");
-        let env = await space.getEnvironment("master");
-        let entry = await env.createEntry("<your content type>", {
-          fields: {
-            title: {
-              "en-US": "my new entry"
-            }
-          }
-        });
-        entry = await entry.publish();
-        console.log(`Entry ${entry.sys.id} published.`);
-      } catch (error) {
-        console.error(error);
-      }
-    },
+createEntry: async function() {
+    try {
+    let space = await window.contentfulClient.getSpace("<your space id>");
+    let env = await space.getEnvironment("master");
+    let entry = await env.createEntry("<your content type>", {
+        fields: {
+        title: {
+            "en-US": "my new entry"
+        }
+        }
+    });
+    entry = await entry.publish();
+    console.log(`Entry ${entry.sys.id} published.`);
+    } catch (error) {
+    console.error(error);
+    }
+},
 ```
 #### Creating an asset and linking it to an entry
 ```javascript
-    createAsset: async function(event) {
-      let file = event.target.files[0];
-      let reader = new FileReader();
-      reader.onload = async function(result) {
-        try {
-        let space = await window.contentfulClient.getSpace("<your space id>");
+createAsset: async function(event) {
+    let file = event.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async function(result) {
+    try {
+        let space = await window.contentfulClient.getSpace("7la5sjify8om");
         let env = await space.getEnvironment("master");
         let upload = await env.createUpload({ file: reader.result });
 
         let asset = await env.createAsset({
-          fields: {
+        fields: {
             title: {
-              "en-US": file.name
+            "en-US": file.name
             },
             file: {
-              "en-US": {
+            "en-US": {
                 fileName: file.name,
                 contentType: file.type,
                 uploadFrom: {
-                  sys: {
+                sys: {
                     type: "Link",
                     linkType: "Upload",
                     id: upload.sys.id
-                  }
                 }
-              }
+                }
             }
-          }
+            }
+        }
         });
         asset = await asset.processForAllLocales();
         asset = await asset.publish();
-        let entry = await env.createEntry("<content type>", {
-          fields: {
+        let entry = await env.createEntry("bikespot", {
+        fields: {
             title: {
-              "en-US": "my new entry with image"
+            "en-US": "my new bike spot with image"
             },
-            "<your field name>": {
-              "en-US": {
+            portrait: {
+            "en-US": {
                 sys: {
-                  id: asset.sys.id,
-                  linkType: "Asset",
-                  type: "Link"
+                id: asset.sys.id,
+                linkType: "Asset",
+                type: "Link"
                 }
-              }
             }
-          }
+            }
+        }
         });
         entry = await entry.publish();
-
-        }
-        catch (error) {
-          console.error(error);
-        }
-      };
-      reader.readAsArrayBuffer(file);
+    } catch (error) {
+        console.error(error);
     }
+    };
+    reader.readAsArrayBuffer(file);
+}
 ```
 ## Adding a location to the map
 You can use the Location type in Contentful to store coordinates.
