@@ -31,7 +31,7 @@ You can open a command window on Windows by pressing the windows key and typing 
 * Make sure you have at least version 10, if not update.
 
 ## Install Git
-Git helps your collaborte with your team mates and provides version control.
+Git helps your collaborate with your team mates and provides version control.
 
 * https://git-scm.com/downloads
 
